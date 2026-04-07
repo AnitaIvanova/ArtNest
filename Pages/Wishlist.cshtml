@@ -1,0 +1,48 @@
+@page
+@model ARTNEST.Pages.WishlistModel
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+<section class="page-section">
+    <div class="container wishlist-container">
+
+        <div class="wishlist-header">
+            <h1 class="page-title">My Wishlist</h1>
+            <p class="page-subtitle">Artworks you want to see in person</p>
+            <div class="wishlist-count">
+                <span>♥</span>
+                <span>@Model.SavedArtworks.Count artworks saved</span>
+            </div>
+        </div>
+
+        @if (Model.SavedArtworks.Count == 0)
+        {
+            <div class="journal-empty">
+                <h3>Your wishlist is empty</h3>
+                <p>Start exploring and save artworks you want to see in person</p>
+            </div>
+        }
+        else
+        {
+            <div class="artwork-grid">
+                @foreach (var item in Model.SavedArtworks)
+                {
+                    <div class="artwork-card">
+                        <div class="artwork-image-wrapper">
+                            <img src="@item.Artwork?.Image" alt="@item.Artwork?.Title" class="artwork-image" />
+                        </div>
+
+                        <div class="artwork-card-body">
+                            <h4>@item.Artwork?.Title</h4>
+                            <p class="artist-name">@item.Artwork?.Artist</p>
+                            <p class="museum-name">@item.Artwork?.Museum</p>
+                            <p class="saved-date">Saved @item.SavedDate.ToString("MMM d, yyyy")</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</section>

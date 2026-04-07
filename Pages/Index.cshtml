@@ -1,0 +1,101 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-background" style="background-image: url('@Model.Artworks[0].Image');"></div>
+
+    <div class="hero-content">
+        <h2>
+            Discover, remember, and cherish<br />the art that moves you.
+        </h2>
+
+        <p class="hero-text">
+            A personal space to track museum visits, save artworks, and reflect on your experiences.
+        </p>
+
+        <div class="search-wrapper">
+            <div class="search-bar">
+                <span class="search-icon">⌕</span>
+                <input type="text" placeholder="Search artworks, artists, or museums…" />
+            </div>
+        </div>
+
+        <div class="hero-links">
+            <a href="#">Explore by Artist</a>
+            <span>•</span>
+            <a href="#">Museum</a>
+            <span>•</span>
+            <a href="#">City</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Artworks Section -->
+<section class="featured-section">
+    <div class="container">
+        <h3>Featured Artworks</h3>
+
+        <div class="artwork-grid">
+            @foreach (var artwork in Model.Artworks)
+            {
+                <div class="artwork-card">
+                    <div class="artwork-image-wrapper">
+                        <img src="@artwork.Image" alt="@artwork.Title" class="artwork-image" />
+                    </div>
+
+                    <div class="artwork-card-body">
+                        <h4>@artwork.Title</h4>
+                        <p class="artist-name">@artwork.Artist</p>
+                        <p class="museum-name">@artwork.Museum</p>
+
+                        <button class="save-button" type="button">
+                            ♡ Save
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-section">
+    <div class="container">
+        <div class="how-grid">
+            <div class="how-card">
+                <div class="icon-circle">◉</div>
+                <h4>Discover</h4>
+                <p>Search and explore artworks by artist, museum, or city.</p>
+            </div>
+
+            <div class="how-card">
+                <div class="icon-circle">✦</div>
+                <h4>Save</h4>
+                <p>Create a personal wishlist of artworks you want to see.</p>
+            </div>
+
+            <div class="how-card">
+                <div class="icon-circle">✎</div>
+                <h4>Reflect</h4>
+                <p>Write reflections and track your museum experiences.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h3>
+            Turn museum visits into lasting<br />personal art memories.
+        </h3>
+
+        <button class="cta-button" type="button">
+            Start Your Collection
+        </button>
+    </div>
+</section>

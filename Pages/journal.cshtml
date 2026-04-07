@@ -1,0 +1,55 @@
+@page
+@model ARTNEST.Pages.JournalModel
+@{
+    ViewData["Title"] = "Journal";
+}
+
+<section class="page-section">
+    <div class="container journal-container">
+
+        <div class="journal-header">
+            <h1 class="page-title">My Journal</h1>
+
+            <p class="page-subtitle">
+                Personal reflections on artworks that moved you
+            </p>
+
+            <button class="cta-button">
+                ✏️ New Entry
+            </button>
+        </div>
+
+        @if (Model.Entries.Count == 0)
+        {
+            <div class="journal-empty">
+                <h3>No journal entries yet</h3>
+                <p>Start documenting your museum visits and reflections</p>
+            </div>
+        }
+        else
+        {
+            <div class="journal-list">
+                @foreach (var entry in Model.Entries)
+                {
+                    <div class="journal-card">
+
+                       <div class="journal-image">
+    <img src="@entry.Artwork?.Image" alt="@entry.Artwork?.Title" />
+</div>
+
+<div class="journal-content">
+    <div class="journal-date">
+        📅 @entry.Date.ToString("MMMM d, yyyy")
+    </div>
+    <h3>@entry.Artwork?.Title</h3>
+    <p class="artist-name">@entry.Artwork?.Artist</p>
+    <p class="museum-name">@entry.Artwork?.Museum</p>
+    <p class="journal-reflection">@entry.Reflection</p>
+</div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</section>

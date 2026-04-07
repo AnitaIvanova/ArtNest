@@ -1,0 +1,46 @@
+@page
+@model ARTNEST.Pages.ExploreModel
+@{
+    ViewData["Title"] = "Explore";
+}
+
+<section class="page-section">
+    <div class="container">
+        <h1 class="page-title">Explore Artworks</h1>
+        <p class="page-subtitle">
+            Browse through thousands of masterpieces from museums around the world
+        </p>
+
+        <div class="explore-toolbar">
+            <div class="explore-search">
+                <span class="search-icon">⌕</span>
+                <input type="text" placeholder="Search by artwork, artist, or museum…" />
+            </div>
+
+            <button type="button" class="filter-button">
+                Filter
+            </button>
+        </div>
+
+        <div class="artwork-grid">
+            @foreach (var artwork in Model.Artworks)
+            {
+                <div class="artwork-card">
+                    <div class="artwork-image-wrapper">
+                        <img src="@artwork.Image" alt="@artwork.Title" class="artwork-image" />
+                    </div>
+
+                    <div class="artwork-card-body">
+                        <h4>@artwork.Title</h4>
+                        <p class="artist-name">@artwork.Artist • @artwork.Year</p>
+                        <p class="museum-name">@artwork.Museum</p>
+
+                        <button type="button" class="save-button">
+                            ♥ Save to Wishlist
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
