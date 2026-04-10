@@ -1,7 +1,14 @@
+using ARTNEST.Repositories;
+using ARTNEST.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<ArtworkRepository>();
+builder.Services.AddScoped<WishlistRepository>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 
@@ -9,18 +16,14 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
-
-app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
+app.MapRazorPages();
 
 app.Run();
