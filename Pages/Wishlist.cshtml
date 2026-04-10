@@ -30,14 +30,20 @@
                 {
                     <div class="artwork-card">
                         <div class="artwork-image-wrapper">
-                            <img src="@item.Artwork?.Image" alt="@item.Artwork?.Title" class="artwork-image" />
+                            <img src="@item.ImageUrl" alt="@item.Title" class="artwork-image" />
                         </div>
 
                         <div class="artwork-card-body">
-                            <h4>@item.Artwork?.Title</h4>
-                            <p class="artist-name">@item.Artwork?.Artist</p>
-                            <p class="museum-name">@item.Artwork?.Museum</p>
-                            <p class="saved-date">Saved @item.SavedDate.ToString("MMM d, yyyy")</p>
+                            <h4>@item.Title</h4>
+                            <p class="artist-name">@item.Artist</p>
+                            <p class="museum-name">@item.Museum</p>
+
+                            <form method="post" asp-page-handler="Remove">
+                                <input type="hidden" name="artworkId" value="@item.Id" />
+                                <button type="submit" class="save-button">
+                                    Remove
+                                </button>
+                            </form>
                         </div>
                     </div>
                 }

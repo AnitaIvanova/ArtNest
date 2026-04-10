@@ -6,7 +6,7 @@
 
 <!-- Hero Section -->
 <section class="hero-section">
-    <div class="hero-background" style="background-image: url('@Model.Artworks[0].Image');"></div>
+    <div class="hero-background" style="background-image: url('@Model.Artworks[0].ImageUrl');"></div>
 
     <div class="hero-content">
         <h2>
@@ -44,7 +44,7 @@
             {
                 <div class="artwork-card">
                     <div class="artwork-image-wrapper">
-                        <img src="@artwork.Image" alt="@artwork.Title" class="artwork-image" />
+                        <img src="@artwork.ImageUrl" alt="@artwork.Title" class="artwork-image" />
                     </div>
 
                     <div class="artwork-card-body">
@@ -52,9 +52,12 @@
                         <p class="artist-name">@artwork.Artist</p>
                         <p class="museum-name">@artwork.Museum</p>
 
-                        <button class="save-button" type="button">
-                            ♡ Save
-                        </button>
+                      <form method="post" asp-page-handler="Save">
+    <input type="hidden" name="artworkId" value="@artwork.Id" />
+    <button class="save-button" type="submit">
+        ♡ Save
+    </button>
+</form>
                     </div>
                 </div>
             }

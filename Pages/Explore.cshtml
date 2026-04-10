@@ -27,7 +27,7 @@
             {
                 <div class="artwork-card">
                     <div class="artwork-image-wrapper">
-                        <img src="@artwork.Image" alt="@artwork.Title" class="artwork-image" />
+                        <img src="@artwork.ImageUrl" alt="@artwork.Title" class="artwork-image" />
                     </div>
 
                     <div class="artwork-card-body">
@@ -35,9 +35,12 @@
                         <p class="artist-name">@artwork.Artist • @artwork.Year</p>
                         <p class="museum-name">@artwork.Museum</p>
 
-                        <button type="button" class="save-button">
-                            ♥ Save to Wishlist
-                        </button>
+                        <form method="post" asp-page-handler="Save">
+                            <input type="hidden" name="artworkId" value="@artwork.Id" />
+                            <button type="submit" class="save-button">
+                                ♥ Save to Wishlist
+                            </button>
+                        </form>
                     </div>
                 </div>
             }

@@ -1,21 +1,45 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ARTNEST.Models;
-using ARTNEST.Data;
+using ARTNEST.Repositories;
 
 namespace ARTNEST.Pages
 {
     public class WishlistModel : PageModel
     {
-        public List<WishlistItem> SavedArtworks { get; set; } = new();
+        private readonly WishlistRepository _wishlistRepository;
 
-        public void OnGet()
+        public List<Artwork> SavedArtworks { get; set; } = new List<Artwork>();
+
+        public WishlistModel(WishlistRepository wishlistRepository)
         {
-            SavedArtworks = new List<WishlistItem>
+            _wishlistRepository = wishlistRepository;
+        }
+
+        public IActionResult OnGet()
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
             {
-                new WishlistItem { Id = 1, ArtworkId = 1, SavedDate = new DateTime(2026, 2, 28), Artwork = ArtworkData.GetById(1) },
-                new WishlistItem { Id = 2, ArtworkId = 3, SavedDate = new DateTime(2026, 2, 25), Artwork = ArtworkData.GetById(3) },
-                new WishlistItem { Id = 3, ArtworkId = 2, SavedDate = new DateTime(2026, 2, 20), Artwork = ArtworkData.GetById(2) }
-            };
+                return RedirectToPage("/Login");
+            }
+
+            SavedArtworks = _wishlistRepository.GetWishlistByUserId(userId.Value);
+            return Page();
+        }
+
+        public IActionResult OnPostRemove(int artworkId)
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return RedirectToPage("/Login");
+            }
+
+            _wishlistRepository.RemoveFromWishlist(userId.Value, artworkId);
+            return RedirectToPage();
         }
     }
 }
