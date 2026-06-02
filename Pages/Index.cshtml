@@ -2,11 +2,18 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home";
+    string heroBg = Model.Artworks.Count > 0 ? Model.Artworks[0].ImageUrl : "";
 }
 
-<!-- Hero Section -->
 <section class="hero-section">
-    <div class="hero-background" style="background-image: url('@Model.Artworks[0].ImageUrl');"></div>
+    @if (!string.IsNullOrEmpty(heroBg))
+    {
+        <div class="hero-background" style="background-image: url('@heroBg');"></div>
+    }
+    else
+    {
+        <div class="hero-background hero-background-fallback"></div>
+    }
 
     <div class="hero-content">
         <h2>
@@ -18,54 +25,60 @@
         </p>
 
         <div class="search-wrapper">
-            <div class="search-bar">
-                <span class="search-icon">⌕</span>
-                <input type="text" placeholder="Search artworks, artists, or museums…" />
-            </div>
+            <form method="get" action="/Explore">
+                <div class="search-bar">
+                    <span class="search-icon">⌕</span>
+                    <input type="text" name="SearchQuery"
+                           placeholder="Search artworks, artists, or museums…" />
+                </div>
+            </form>
         </div>
 
         <div class="hero-links">
-            <a href="#">Explore by Artist</a>
+            <a href="/Explore">Explore All</a>
             <span>•</span>
-            <a href="#">Museum</a>
+            <a href="/Wishlist">My Wishlist</a>
             <span>•</span>
-            <a href="#">City</a>
+            <a href="/Journal">My Journal</a>
         </div>
     </div>
 </section>
 
-<!-- Featured Artworks Section -->
 <section class="featured-section">
     <div class="container">
         <h3>Featured Artworks</h3>
 
-        <div class="artwork-grid">
-            @foreach (var artwork in Model.Artworks)
-            {
-                <div class="artwork-card">
-                    <div class="artwork-image-wrapper">
-                        <img src="@artwork.ImageUrl" alt="@artwork.Title" class="artwork-image" />
-                    </div>
+        @if (Model.Artworks.Count == 0)
+        {
+            <p class="page-subtitle">No artworks available yet. Check back soon!</p>
+        }
+        else
+        {
+            <div class="artwork-grid">
+                @foreach (var artwork in Model.Artworks)
+                {
+                    <div class="artwork-card">
+                        <div class="artwork-image-wrapper">
+                            <img src="@artwork.ImageUrl" alt="@artwork.Title" class="artwork-image" />
+                        </div>
 
-                    <div class="artwork-card-body">
-                        <h4>@artwork.Title</h4>
-                        <p class="artist-name">@artwork.Artist</p>
-                        <p class="museum-name">@artwork.Museum</p>
+                        <div class="artwork-card-body">
+                            <h4>@artwork.Title</h4>
+                            <p class="artist-name">@artwork.Artist</p>
+                            <p class="museum-name">@artwork.Museum</p>
 
-                      <form method="post" asp-page-handler="Save">
-    <input type="hidden" name="artworkId" value="@artwork.Id" />
-    <button class="save-button" type="submit">
-        ♡ Save
-    </button>
-</form>
+                            <form method="post" asp-page-handler="Save">
+                                <input type="hidden" name="artworkId" value="@artwork.Id" />
+                                <button class="save-button" type="submit">♡ Save</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
     </div>
 </section>
 
-<!-- How It Works Section -->
 <section class="how-section">
     <div class="container">
         <div class="how-grid">
@@ -90,15 +103,11 @@
     </div>
 </section>
 
-<!-- CTA Section -->
 <section class="cta-section">
     <div class="cta-content">
         <h3>
             Turn museum visits into lasting<br />personal art memories.
         </h3>
-
-        <button class="cta-button" type="button">
-            Start Your Collection
-        </button>
+        <a href="/Register" class="cta-button">Start Your Collection</a>
     </div>
 </section>

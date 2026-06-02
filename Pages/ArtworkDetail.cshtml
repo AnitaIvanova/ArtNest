@@ -1,0 +1,67 @@
+@page "/Artwork/{id:int}"
+@model ARTNEST.Pages.ArtworkDetailModel
+@{
+    ViewData["Title"] = Model.Artwork?.Title ?? "Artwork";
+}
+
+<section class="detail-section">
+    <div class="container">
+
+        <a href="javascript:history.back()" class="back-link">← Back</a>
+
+        @if (Model.Artwork == null)
+        {
+            <div class="journal-empty">
+                <h3>Artwork not found</h3>
+                <p>This artwork could not be found.</p>
+            </div>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <div class="message-box message-success">@Model.Message</div>
+            }
+
+            <div class="detail-grid">
+                <div class="detail-image">
+                    <img src="@Model.Artwork.ImageUrl" alt="@Model.Artwork.Title" />
+                </div>
+
+                <div class="detail-info">
+                    <h1>@Model.Artwork.Title</h1>
+                    <p class="detail-artist">@Model.Artwork.Artist</p>
+                    <p class="detail-meta">@Model.Artwork.Year &nbsp;·&nbsp; @Model.Artwork.Museum</p>
+                    <p class="detail-description">@Model.Artwork.Description</p>
+
+                    @if (Model.IsVisited)
+                    {
+                        <div class="visited-badge">✓ You've visited this artwork</div>
+                    }
+
+                    <div class="detail-actions">
+                        <!-- Save to Wishlist -->
+                        <form method="post" asp-page-handler="Save">
+                            <input type="hidden" name="artworkId" value="@Model.Artwork.Id" />
+                            <button type="submit" class="cta-button">♥ Save to Wishlist</button>
+                        </form>
+
+                        <!-- Mark / Unmark Visited -->
+                        <form method="post" asp-page-handler="ToggleVisited">
+                            <input type="hidden" name="artworkId" value="@Model.Artwork.Id" />
+                            @if (Model.IsVisited)
+                            {
+                                <button type="submit" class="visited-button is-visited">✓ Mark as Unvisited</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="visited-button">☑ Mark as Visited</button>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</section>

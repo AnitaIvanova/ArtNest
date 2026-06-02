@@ -1,0 +1,15 @@
+
+bin/
+obj/
+publish-luna/
+
+
+.vs/
+.vscode/
+.idea/
+*.user
+
+
+.DS_Store
+
+appsettings.json

@@ -1,11 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
+<ItemGroup>
+  <Compile Remove="ArtNest.Tests/**/*.cs" />
+  <Content Remove="ArtNest.Tests/**" />
+  <None Remove="ArtNest.Tests/**" />
+  <EmbeddedResource Remove="ArtNest.Tests/**" />
+</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
   </ItemGroup>

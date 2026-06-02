@@ -9,21 +9,52 @@
 
         <div class="journal-header">
             <h1 class="page-title">My Journal</h1>
-
-            <p class="page-subtitle">
-                Personal reflections on artworks that moved you
-            </p>
-
-            <button class="cta-button">
+            <p class="page-subtitle">Personal reflections on artworks that moved you</p>
+            <button class="cta-button" type="button" id="toggle-new-entry">
                 ✏️ New Entry
             </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="message-box @(Model.MessageIsSuccess ? "message-success" : "message-error")">
+                @Model.Message
+            </div>
+        }
+
+        <div id="new-entry-form" class="new-entry-card hidden">
+            <h3>New Journal Entry</h3>
+            <form method="post" asp-page-handler="Add" id="add-form">
+                <div class="form-group">
+                    <label>Artwork <span class="required-star">*</span></label>
+                    <select name="NewArtworkId" class="form-input" required>
+                        <option value="0">— Select an artwork —</option>
+                        @foreach (var artwork in Model.Artworks)
+                        {
+                            <option value="@artwork.Id">@artwork.Title – @artwork.Artist</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Reflection <span class="required-star">*</span></label>
+                    <textarea name="NewReflection" class="form-input reflection-textarea"
+                              placeholder="What did this artwork make you feel or think? (at least 10 characters)"
+                              minlength="10" required></textarea>
+                    <span class="field-hint">Minimum 10 characters</span>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="auth-button" style="width:auto;padding:12px 32px;">Save Entry</button>
+                    <button type="button" class="cancel-button" id="cancel-new-entry">Cancel</button>
+                </div>
+            </form>
         </div>
 
         @if (Model.Entries.Count == 0)
         {
             <div class="journal-empty">
+                <div class="empty-icon">✎</div>
                 <h3>No journal entries yet</h3>
-                <p>Start documenting your museum visits and reflections</p>
+                <p>Click <strong>New Entry</strong> above to start documenting your museum experiences.</p>
             </div>
         }
         else
@@ -31,21 +62,42 @@
             <div class="journal-list">
                 @foreach (var entry in Model.Entries)
                 {
-                    <div class="journal-card">
+                    <div class="journal-card" id="entry-@entry.Id">
+                        <div class="journal-image">
+                            @if (!string.IsNullOrEmpty(entry.Artwork?.ImageUrl))
+                            {
+                                <img src="@entry.Artwork.ImageUrl" alt="@entry.Artwork.Title" />
+                            }
+                        </div>
+                        <div class="journal-content">
+                            <div class="journal-date">📅 @entry.Date.ToString("MMMM d, yyyy")</div>
+                            <h3>@entry.Artwork?.Title</h3>
+                            <p class="artist-name">@entry.Artwork?.Artist</p>
+                            <p class="museum-name">@entry.Artwork?.Museum</p>
 
-                       <div class="journal-image">
-    <img src="@entry.Artwork?something.Image" alt="@entry.Artwork?.Title" />
-</div>
+                            <p class="journal-reflection" id="reflection-text-@entry.Id">@entry.Reflection</p>
 
-<div class="journal-content">
-    <div class="journal-date">
-        📅 @entry.Date.ToString("MMMM d, yyyy")
-    </div>
-    <h3>@entry.Artwork?.Title</h3>
-    <p class="artist-name">@entry.Artwork?.Artist</p>
-    <p class="museum-name">@entry.Artwork?.Museum</p>
-    <p class="journal-reflection">@entry.Reflection</p>
-</div>
+                            <div id="edit-form-@entry.Id" class="hidden">
+                                <form method="post" asp-page-handler="Edit">
+                                    <input type="hidden" name="EditEntryId" value="@entry.Id" />
+                                    <textarea name="EditReflection" class="form-input reflection-textarea"
+                                              minlength="10" required>@entry.Reflection</textarea>
+                                    <div class="form-actions" style="margin-top:10px;">
+                                        <button type="submit" class="auth-button" style="width:auto;padding:9px 24px;font-size:13px;">Save</button>
+                                        <button type="button" class="cancel-button" onclick="cancelEdit(@entry.Id)">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="journal-card-actions">
+                                <button type="button" class="edit-button" onclick="startEdit(@entry.Id)">✏ Edit</button>
+                                <form method="post" asp-page-handler="Delete"
+                                      onsubmit="return confirm('Delete this journal entry?')">
+                                    <input type="hidden" name="entryId" value="@entry.Id" />
+                                    <button type="submit" class="delete-button">🗑 Delete</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 }
             </div>
@@ -53,3 +105,43 @@
 
     </div>
 </section>
+
+<script>
+    document.getElementById('toggle-new-entry').addEventListener('click', function () {
+        const form = document.getElementById('new-entry-form');
+        form.classList.toggle('hidden');
+        if (!form.classList.contains('hidden')) {
+            form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    });
+
+    document.getElementById('cancel-new-entry')?.addEventListener('click', function () {
+        document.getElementById('new-entry-form').classList.add('hidden');
+    });
+
+    function startEdit(entryId) {
+        document.getElementById('reflection-text-' + entryId).classList.add('hidden');
+        document.getElementById('edit-form-' + entryId).classList.remove('hidden');
+        document.querySelector('#entry-' + entryId + ' .edit-button').classList.add('hidden');
+    }
+
+    function cancelEdit(entryId) {
+        document.getElementById('reflection-text-' + entryId).classList.remove('hidden');
+        document.getElementById('edit-form-' + entryId).classList.add('hidden');
+        document.querySelector('#entry-' + entryId + ' .edit-button').classList.remove('hidden');
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Message) && !Model.MessageIsSuccess)
+    {
+        <text>
+        document.getElementById('new-entry-form').classList.remove('hidden');
+        </text>
+    }
+
+    @if (Model.MessageIsSuccess)
+    {
+        <text>
+        document.querySelector('.message-success')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        </text>
+    }
+</script>

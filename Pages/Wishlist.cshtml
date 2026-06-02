@@ -12,15 +12,22 @@
             <p class="page-subtitle">Artworks you want to see in person</p>
             <div class="wishlist-count">
                 <span>♥</span>
-                <span>@Model.SavedArtworks.Count artworks saved</span>
+                <span>@Model.SavedArtworks.Count artwork@(Model.SavedArtworks.Count == 1 ? "" : "s") saved</span>
             </div>
         </div>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="message-box message-success">@Model.Message</div>
+        }
 
         @if (Model.SavedArtworks.Count == 0)
         {
             <div class="journal-empty">
+                <div class="empty-icon">♡</div>
                 <h3>Your wishlist is empty</h3>
-                <p>Start exploring and save artworks you want to see in person</p>
+                <p>Browse artworks and save the ones you want to see in person.</p>
+                <a href="/Explore" class="cta-button" style="display:inline-block;margin-top:20px;">Explore Artworks</a>
             </div>
         }
         else
@@ -29,20 +36,28 @@
                 @foreach (var item in Model.SavedArtworks)
                 {
                     <div class="artwork-card">
-                        <div class="artwork-image-wrapper">
-                            <img src="@item.ImageUrl" alt="@item.Title" class="artwork-image" />
-                        </div>
-
+                        <a href="/Artwork/@item.Id">
+                            <div class="artwork-image-wrapper">
+                                <img src="@item.ImageUrl" alt="@item.Title" class="artwork-image" />
+                            </div>
+                        </a>
                         <div class="artwork-card-body">
-                            <h4>@item.Title</h4>
-                            <p class="artist-name">@item.Artist</p>
+                            <h4>
+                                <a href="/Artwork/@item.Id" style="text-decoration:none;color:inherit;">
+                                    @item.Title
+                                </a>
+                            </h4>
+                            <p class="artist-name">@item.Artist · @item.Year</p>
                             <p class="museum-name">@item.Museum</p>
+
+                            @if (Model.VisitedIds.Contains(item.Id))
+                            {
+                                <div class="visited-badge">✓ Visited</div>
+                            }
 
                             <form method="post" asp-page-handler="Remove">
                                 <input type="hidden" name="artworkId" value="@item.Id" />
-                                <button type="submit" class="save-button">
-                                    Remove
-                                </button>
+                                <button type="submit" class="remove-button">✕ Remove</button>
                             </form>
                         </div>
                     </div>

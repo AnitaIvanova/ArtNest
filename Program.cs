@@ -1,29 +1,35 @@
-using ARTNEST.Repositories;
-using ARTNEST.Services;
+using ARTNEST.DAL;
+using ARTNEST.BLL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<ArtworkRepository>();
-builder.Services.AddScoped<WishlistRepository>();
-builder.Services.AddScoped<UserRepository>();
+
+builder.Services.AddScoped<IArtworkRepository, ArtworkRepository>();
+builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IJournalRepository, JournalRepository>();
+builder.Services.AddScoped<IVisitedRepository, VisitedRepository>();
+
+builder.Services.AddScoped<ArtworkService>();
+builder.Services.AddScoped<WishlistService>();
+builder.Services.AddScoped<VisitedService>();
+builder.Services.AddScoped<JournalService>();
 builder.Services.AddScoped<UserService>();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
-}
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseSession();
 app.MapRazorPages();
-
 app.Run();

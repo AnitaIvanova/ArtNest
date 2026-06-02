@@ -1,39 +1,61 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ARTNEST.BLL;
 using ARTNEST.Models;
-using ARTNEST.Repositories;
 
 namespace ARTNEST.Pages
 {
     public class ExploreModel : PageModel
     {
-        private readonly ArtworkRepository _artworkRepository;
-        private readonly WishlistRepository _wishlistRepository;
+        private readonly ArtworkService _artworkService;
+        private readonly WishlistService _wishlistService;
+        private readonly VisitedService _visitedService;
 
         public List<Artwork> Artworks { get; set; } = new();
+        public List<string> AllArtists { get; set; } = new();
+        public List<string> AllMuseums { get; set; } = new();
+        public HashSet<int> VisitedIds { get; set; } = new();
 
-        public ExploreModel(ArtworkRepository artworkRepository, WishlistRepository wishlistRepository)
+        [BindProperty(SupportsGet = true)] public string? SearchQuery { get; set; }
+        [BindProperty(SupportsGet = true)] public string? FilterArtist { get; set; }
+        [BindProperty(SupportsGet = true)] public string? FilterMuseum { get; set; }
+        [BindProperty(SupportsGet = true)] public string? SortBy { get; set; }
+
+        public ExploreModel(ArtworkService artworkService, WishlistService wishlistService,
+                            VisitedService visitedService)
         {
-            _artworkRepository = artworkRepository;
-            _wishlistRepository = wishlistRepository;
+            _artworkService = artworkService;
+            _wishlistService = wishlistService;
+            _visitedService = visitedService;
         }
 
-        public void OnGet()
-        {
-            Artworks = _artworkRepository.GetAllArtworks();
-        }
+        public void OnGet() => LoadData();
 
         public IActionResult OnPostSave(int artworkId)
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
+            if (!userId.HasValue) return RedirectToPage("/Login");
+            _wishlistService.SaveArtwork(userId.Value, artworkId);
+            return RedirectToPage(new { SearchQuery, FilterArtist, FilterMuseum, SortBy });
+        }
 
-            if (userId == null)
-            {
-                return RedirectToPage("/Login");
-            }
+        public IActionResult OnPostToggleVisited(int artworkId)
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (!userId.HasValue) return RedirectToPage("/Login");
+            _visitedService.ToggleVisited(userId.Value, artworkId);
+            return RedirectToPage(new { SearchQuery, FilterArtist, FilterMuseum, SortBy });
+        }
 
-            _wishlistRepository.SaveToWishlist(userId.Value, artworkId);
-            return RedirectToPage();
+        private void LoadData()
+        {
+            Artworks = _artworkService.SearchAndFilter(SearchQuery, FilterArtist, FilterMuseum, SortBy);
+            AllArtists = _artworkService.GetAllArtists();
+            AllMuseums = _artworkService.GetAllMuseums();
+
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId.HasValue)
+                VisitedIds = _visitedService.GetVisitedIds(userId.Value);
         }
     }
 }

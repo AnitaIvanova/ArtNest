@@ -7,43 +7,101 @@
 <section class="page-section">
     <div class="container">
         <h1 class="page-title">Explore Artworks</h1>
-        <p class="page-subtitle">
-            Browse through thousands of masterpieces from museums around the world
-        </p>
+        <p class="page-subtitle">Browse masterpieces from museums around the world</p>
 
-        <div class="explore-toolbar">
+        <form method="get" class="explore-toolbar">
             <div class="explore-search">
                 <span class="search-icon">⌕</span>
-                <input type="text" placeholder="Search by artwork, artist, or museum…" />
+                <input type="text" name="SearchQuery" value="@Model.SearchQuery"
+                       placeholder="Search by artwork, artist, or museum…" />
             </div>
 
-            <button type="button" class="filter-button">
-                Filter
-            </button>
-        </div>
+            <select name="FilterArtist" class="filter-select">
+                <option value="">All Artists</option>
+                @foreach (var artist in Model.AllArtists)
+                {
+                    <option value="@artist" selected="@(Model.FilterArtist == artist ? "selected" : null)">@artist</option>
+                }
+            </select>
 
-        <div class="artwork-grid">
-            @foreach (var artwork in Model.Artworks)
+            <select name="FilterMuseum" class="filter-select">
+                <option value="">All Museums</option>
+                @foreach (var museum in Model.AllMuseums)
+                {
+                    <option value="@museum" selected="@(Model.FilterMuseum == museum ? "selected" : null)">@museum</option>
+                }
+            </select>
+
+            <select name="SortBy" class="filter-select">
+                <option value="" selected="@(string.IsNullOrEmpty(Model.SortBy) ? "selected" : null)">Sort: A–Z</option>
+                <option value="artist" selected="@(Model.SortBy == "artist" ? "selected" : null)">Sort: Artist</option>
+                <option value="year_asc" selected="@(Model.SortBy == "year_asc" ? "selected" : null)">Sort: Oldest first</option>
+                <option value="year_desc" selected="@(Model.SortBy == "year_desc" ? "selected" : null)">Sort: Newest first</option>
+            </select>
+
+            <button type="submit" class="filter-button">Search</button>
+
+            @if (!string.IsNullOrEmpty(Model.SearchQuery) || !string.IsNullOrEmpty(Model.FilterArtist) || !string.IsNullOrEmpty(Model.FilterMuseum))
             {
-                <div class="artwork-card">
-                    <div class="artwork-image-wrapper">
-                        <img src="@artwork.ImageUrl" alt="@artwork.Title" class="artwork-image" />
-                    </div>
-
-                    <div class="artwork-card-body">
-                        <h4>@artwork.Title</h4>
-                        <p class="artist-name">@artwork.Artist • @artwork.Year</p>
-                        <p class="museum-name">@artwork.Museum</p>
-
-                        <form method="post" asp-page-handler="Save">
-                            <input type="hidden" name="artworkId" value="@artwork.Id" />
-                            <button type="submit" class="save-button">
-                                ♥ Save to Wishlist
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                <a href="/Explore" class="clear-filter-link">✕ Clear</a>
             }
-        </div>
+        </form>
+
+        @if (Model.Artworks.Count == 0)
+        {
+            <div class="journal-empty">
+                <h3>No artworks found</h3>
+                <p>Try a different search term or clear the filters.</p>
+                <a href="/Explore" class="cta-button" style="display:inline-block;margin-top:20px;">Clear filters</a>
+            </div>
+        }
+        else
+        {
+            <p class="results-count">@Model.Artworks.Count artwork(s) found</p>
+            <div class="artwork-grid">
+                @foreach (var artwork in Model.Artworks)
+                {
+                    <div class="artwork-card">
+                        <a href="/Artwork/@artwork.Id">
+                            <div class="artwork-image-wrapper">
+                                <img src="@artwork.ImageUrl" alt="@artwork.Title" class="artwork-image" />
+                            </div>
+                        </a>
+                        <div class="artwork-card-body">
+                            <h4><a href="/Artwork/@artwork.Id" style="text-decoration:none;color:inherit;">@artwork.Title</a></h4>
+                            <p class="artist-name">@artwork.Artist · @artwork.Year</p>
+                            <p class="museum-name">@artwork.Museum</p>
+
+                            @if (Model.VisitedIds.Contains(artwork.Id))
+                            {
+                                <div class="visited-badge">✓ Visited</div>
+                            }
+
+                            <div class="card-actions">
+                                <form method="post" asp-page-handler="Save">
+                                    <input type="hidden" name="artworkId" value="@artwork.Id" />
+                                    <input type="hidden" name="SearchQuery" value="@Model.SearchQuery" />
+                                    <input type="hidden" name="FilterArtist" value="@Model.FilterArtist" />
+                                    <input type="hidden" name="FilterMuseum" value="@Model.FilterMuseum" />
+                                    <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                                    <button type="submit" class="save-button">♥ Save</button>
+                                </form>
+
+                                <form method="post" asp-page-handler="ToggleVisited">
+                                    <input type="hidden" name="artworkId" value="@artwork.Id" />
+                                    <input type="hidden" name="SearchQuery" value="@Model.SearchQuery" />
+                                    <input type="hidden" name="FilterArtist" value="@Model.FilterArtist" />
+                                    <input type="hidden" name="FilterMuseum" value="@Model.FilterMuseum" />
+                                    <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                                    <button type="submit" class="visited-button @(Model.VisitedIds.Contains(artwork.Id) ? "is-visited" : "")">
+                                        @(Model.VisitedIds.Contains(artwork.Id) ? "✓ Visited" : "☑ Visit")
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </section>

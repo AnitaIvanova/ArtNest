@@ -13,16 +13,25 @@
         </div>
 
         <div class="auth-card">
-            <form method="post">
 
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <div class="message-box @(Model.Message.Contains("successfully") ? "message-success" : "message-error")">
+                    @Model.Message
+                </div>
+            }
+
+            <form method="post">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" placeholder="Jane Doe" />
+                    <input type="text" id="fullName" name="fullName" value="@Model.FullName"
+                           placeholder="Jane Doe" />
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="you@example.com" />
+                    <input type="email" id="email" name="email" value="@Model.Email"
+                           placeholder="you@example.com" />
                 </div>
 
                 <div class="form-group">
@@ -32,12 +41,13 @@
 
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" />
+                    <input type="password" id="confirmPassword" name="confirmPassword"
+                           placeholder="••••••••" />
                 </div>
 
                 <div class="auth-terms">
                     By creating an account, you agree to our
-                    <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    <a href="/Terms">Terms of Service</a> and <a href="/Privacy">Privacy Policy</a>
                 </div>
 
                 <button type="submit" class="auth-button">Create Account</button>
