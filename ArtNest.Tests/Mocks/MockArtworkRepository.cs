@@ -1,6 +1,7 @@
 using ARTNEST.Models;
+using ARTNEST.DAL;
 
-namespace ARTNEST.DAL.Mocks
+namespace ArtNest.Tests.Mocks
 {
      public class MockArtworkRepository : IArtworkRepository
     {
