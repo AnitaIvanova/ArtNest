@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using ARTNEST.Models;
 
 namespace ARTNEST.DAL
@@ -6,10 +7,12 @@ namespace ARTNEST.DAL
     public class ArtworkRepository : IArtworkRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<ArtworkRepository> _logger;
 
-        public ArtworkRepository(IConfiguration configuration)
+        public ArtworkRepository(IConfiguration configuration, ILogger<ArtworkRepository> logger)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _logger = logger;
         }
 
         public List<Artwork> GetAllArtworks()
@@ -65,7 +68,11 @@ namespace ARTNEST.DAL
                     });
                 }
             }
-            catch { return new List<Artwork>(); }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while searching artworks.");
+                return new List<Artwork>();
+            }
             return artworks;
         }
 
@@ -80,7 +87,10 @@ namespace ARTNEST.DAL
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read()) list.Add(reader[0]?.ToString() ?? "");
             }
-            catch { }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while loading distinct artists.");
+            }
             return list;
         }
 
@@ -95,7 +105,10 @@ namespace ARTNEST.DAL
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read()) list.Add(reader[0]?.ToString() ?? "");
             }
-            catch { }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while loading distinct museums.");
+            }
             return list;
         }
 
@@ -123,7 +136,10 @@ namespace ARTNEST.DAL
                     };
                 }
             }
-            catch { }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while loading artwork by id.");
+            }
             return null;
         }
     }

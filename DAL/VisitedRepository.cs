@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using ARTNEST.Models;
 
 namespace ARTNEST.DAL
@@ -6,10 +7,12 @@ namespace ARTNEST.DAL
     public class VisitedRepository : IVisitedRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<VisitedRepository> _logger;
 
-        public VisitedRepository(IConfiguration configuration)
+        public VisitedRepository(IConfiguration configuration, ILogger<VisitedRepository> logger)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _logger = logger;
         }
 
         public bool IsVisited(int userId, int artworkId)
@@ -24,7 +27,11 @@ namespace ARTNEST.DAL
                 command.Parameters.AddWithValue("@ArtworkId", artworkId);
                 return (int)command.ExecuteScalar()! > 0;
             }
-            catch { return false; }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while checking visited status.");
+                return false;
+            }
         }
 
         public void MarkVisited(int userId, int artworkId)
@@ -86,7 +93,11 @@ namespace ARTNEST.DAL
                     });
                 }
             }
-            catch { return new List<Artwork>(); }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while loading visited artworks.");
+                return new List<Artwork>();
+            }
             return artworks;
         }
 
@@ -101,7 +112,11 @@ namespace ARTNEST.DAL
                 cmd.Parameters.AddWithValue("@UserId", userId);
                 return (int)cmd.ExecuteScalar()!;
             }
-            catch { return 0; }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while counting visited artworks.");
+                return 0;
+            }
         }
     }
 }
