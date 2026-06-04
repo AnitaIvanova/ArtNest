@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using ARTNEST.Models;
 
 namespace ARTNEST.DAL
@@ -6,10 +7,12 @@ namespace ARTNEST.DAL
     public class JournalRepository : IJournalRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<JournalRepository> _logger;
 
-        public JournalRepository(IConfiguration configuration)
+        public JournalRepository(IConfiguration configuration, ILogger<JournalRepository> logger)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _logger = logger;
         }
 
         public List<JournalEntry> GetByUserId(int userId)
@@ -50,7 +53,11 @@ namespace ARTNEST.DAL
                     });
                 }
             }
-            catch { return new List<JournalEntry>(); }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while loading journal entries.");
+                return new List<JournalEntry>();
+            }
             return entries;
         }
 
@@ -65,7 +72,11 @@ namespace ARTNEST.DAL
                 command.Parameters.AddWithValue("@UserId", userId);
                 return (int)command.ExecuteScalar()!;
             }
-            catch { return 0; }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while counting journal entries.");
+                return 0;
+            }
         }
 
         public void Add(int userId, int artworkId, string reflection)
