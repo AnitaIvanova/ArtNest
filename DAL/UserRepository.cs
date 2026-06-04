@@ -5,16 +5,16 @@ namespace ARTNEST.DAL
 {
     public class UserRepository : IUserRepository
     {
-        private readonly string _connectionString;
+        private readonly DbConnectionFactory _factory;
 
-        public UserRepository(IConfiguration configuration)
+        public UserRepository(DbConnectionFactory factory)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _factory = factory;
         }
 
         public void SaveUser(User user)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = @"
@@ -32,7 +32,7 @@ namespace ARTNEST.DAL
 
         public User? GetUserByEmail(string email)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = @"
@@ -62,7 +62,7 @@ namespace ARTNEST.DAL
 
         public User? GetUserById(int id)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = @"
@@ -92,7 +92,7 @@ namespace ARTNEST.DAL
 
         public bool UserExists(string email)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = "SELECT COUNT(1) FROM Users WHERE Email = @Email";
@@ -106,7 +106,7 @@ namespace ARTNEST.DAL
 
         public bool EmailExistsForAnotherUser(string email, int userId)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = @"
@@ -124,7 +124,7 @@ namespace ARTNEST.DAL
 
         public void UpdateUser(User user)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = @"

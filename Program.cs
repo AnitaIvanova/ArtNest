@@ -10,7 +10,7 @@ builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJournalRepository, JournalRepository>();
 builder.Services.AddScoped<IVisitedRepository, VisitedRepository>();
-
+builder.Services.AddScoped<DbConnectionFactory>();
 builder.Services.AddScoped<ArtworkService>();
 builder.Services.AddScoped<WishlistService>();
 builder.Services.AddScoped<VisitedService>();

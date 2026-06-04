@@ -6,12 +6,12 @@ namespace ARTNEST.DAL
 {
     public class VisitedRepository : IVisitedRepository
     {
-        private readonly string _connectionString;
+        private readonly DbConnectionFactory _factory;
         private readonly ILogger<VisitedRepository> _logger;
 
-        public VisitedRepository(IConfiguration configuration, ILogger<VisitedRepository> logger)
+        public VisitedRepository(DbConnectionFactory factory, ILogger<VisitedRepository> logger)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _factory = factory;
             _logger = logger;
         }
 
@@ -19,7 +19,7 @@ namespace ARTNEST.DAL
         {
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
                 const string query = "SELECT COUNT(1) FROM VisitedArtworks WHERE UserId = @UserId AND ArtworkId = @ArtworkId";
                 using var command = new SqlCommand(query, connection);
@@ -36,7 +36,7 @@ namespace ARTNEST.DAL
 
         public void MarkVisited(int userId, int artworkId)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
             const string check = "SELECT COUNT(1) FROM VisitedArtworks WHERE UserId = @UserId AND ArtworkId = @ArtworkId";
             using var checkCmd = new SqlCommand(check, connection);
@@ -54,7 +54,7 @@ namespace ARTNEST.DAL
 
         public void UnmarkVisited(int userId, int artworkId)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
             const string query = "DELETE FROM VisitedArtworks WHERE UserId = @UserId AND ArtworkId = @ArtworkId";
             using var cmd = new SqlCommand(query, connection);
@@ -68,7 +68,7 @@ namespace ARTNEST.DAL
             var artworks = new List<Artwork>();
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
                 const string query = @"
                     SELECT A.Id, A.Title, A.Artist, A.Museum, A.ImageUrl, A.Description, A.Year
@@ -105,7 +105,7 @@ namespace ARTNEST.DAL
         {
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
                 const string query = "SELECT COUNT(1) FROM VisitedArtworks WHERE UserId = @UserId";
                 using var cmd = new SqlCommand(query, connection);
