@@ -6,12 +6,12 @@ namespace ARTNEST.DAL
 {
     public class JournalRepository : IJournalRepository
     {
-        private readonly string _connectionString;
+        private readonly DbConnectionFactory _factory;
         private readonly ILogger<JournalRepository> _logger;
 
-        public JournalRepository(IConfiguration configuration, ILogger<JournalRepository> logger)
+        public JournalRepository(DbConnectionFactory factory, ILogger<JournalRepository> logger)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _factory = factory;
             _logger = logger;
         }
 
@@ -20,7 +20,7 @@ namespace ARTNEST.DAL
             var entries = new List<JournalEntry>();
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
                 const string query = @"
                     SELECT J.Id, J.UserId, J.ArtworkId, J.Reflection, J.Date,
@@ -65,7 +65,7 @@ namespace ARTNEST.DAL
         {
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
                 const string query = "SELECT COUNT(1) FROM JournalEntries WHERE UserId = @UserId";
                 using var command = new SqlCommand(query, connection);
@@ -81,7 +81,7 @@ namespace ARTNEST.DAL
 
         public void Add(int userId, int artworkId, string reflection)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
             const string query = @"INSERT INTO JournalEntries (UserId, ArtworkId, Reflection, Date)
                                    VALUES (@UserId, @ArtworkId, @Reflection, @Date)";
@@ -95,7 +95,7 @@ namespace ARTNEST.DAL
 
         public void Delete(int entryId, int userId)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
             const string query = "DELETE FROM JournalEntries WHERE Id = @Id AND UserId = @UserId";
             using var command = new SqlCommand(query, connection);
@@ -106,7 +106,7 @@ namespace ARTNEST.DAL
 
         public void Update(int entryId, int userId, string reflection)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
             const string query = @"UPDATE JournalEntries SET Reflection = @Reflection
                                    WHERE Id = @Id AND UserId = @UserId";
