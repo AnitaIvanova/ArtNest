@@ -5,16 +5,16 @@ namespace ARTNEST.DAL
 {
     public class WishlistRepository : IWishlistRepository
     {
-        private readonly string _connectionString;
+        private readonly DbConnectionFactory _factory;
 
-        public WishlistRepository(IConfiguration configuration)
+        public WishlistRepository(DbConnectionFactory factory)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _factory = factory;
         }
 
         public bool IsAlreadyInWishlist(int userId, int artworkId)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = @"
@@ -32,7 +32,7 @@ namespace ARTNEST.DAL
 
         public void SaveToWishlist(int userId, int artworkId)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             using var transaction = connection.BeginTransaction();
@@ -75,7 +75,7 @@ namespace ARTNEST.DAL
 
         public void RemoveFromWishlist(int userId, int artworkId)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = @"
@@ -93,7 +93,7 @@ namespace ARTNEST.DAL
         {
             var artworks = new List<Artwork>();
 
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = _factory.Create();
             connection.Open();
 
             const string query = @"
