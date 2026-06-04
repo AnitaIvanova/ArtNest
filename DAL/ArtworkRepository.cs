@@ -6,12 +6,12 @@ namespace ARTNEST.DAL
 {
     public class ArtworkRepository : IArtworkRepository
     {
-        private readonly string _connectionString;
+        private readonly DbConnectionFactory _factory;
         private readonly ILogger<ArtworkRepository> _logger;
 
-        public ArtworkRepository(IConfiguration configuration, ILogger<ArtworkRepository> logger)
+        public ArtworkRepository(DbConnectionFactory factory, ILogger<ArtworkRepository> logger)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+            _factory = factory;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace ARTNEST.DAL
             var artworks = new List<Artwork>();
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
 
                 var sql = @"SELECT Id, Title, Artist, Museum, ImageUrl, Description, Year
@@ -81,7 +81,7 @@ namespace ARTNEST.DAL
             var list = new List<string>();
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
                 using var cmd = new SqlCommand("SELECT DISTINCT Artist FROM Artworks ORDER BY Artist", connection);
                 using var reader = cmd.ExecuteReader();
@@ -99,7 +99,7 @@ namespace ARTNEST.DAL
             var list = new List<string>();
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
                 using var cmd = new SqlCommand("SELECT DISTINCT Museum FROM Artworks WHERE Museum != '' ORDER BY Museum", connection);
                 using var reader = cmd.ExecuteReader();
@@ -116,7 +116,7 @@ namespace ARTNEST.DAL
         {
             try
             {
-                using var connection = new SqlConnection(_connectionString);
+                using var connection = _factory.Create();
                 connection.Open();
                 const string query = "SELECT Id, Title, Artist, Museum, ImageUrl, Description, Year FROM Artworks WHERE Id = @Id";
                 using var command = new SqlCommand(query, connection);
