@@ -51,5 +51,11 @@ namespace ArtNest.Tests.Mocks
 
         public List<string> GetDistinctMuseums() =>
             _artworks.Select(a => a.Museum).Distinct().OrderBy(x => x).ToList();
+    public void Insert(Artwork artwork)
+        {
+            int nextId = _artworks.Count == 0 ? 1 : _artworks.Max(a => a.Id) + 1;
+            artwork.Id = nextId;
+            _artworks.Add(artwork);
+        }
     }
 }

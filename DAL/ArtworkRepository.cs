@@ -142,5 +142,30 @@ namespace ARTNEST.DAL
             }
             return null;
         }
+
+        public void Insert(Artwork artwork)
+        {
+            try
+            {
+                using var connection = _factory.Create();
+                connection.Open();
+                const string query = @"
+                    INSERT INTO Artworks (Title, Artist, Museum, ImageUrl, Description, Year)
+                    VALUES (@Title, @Artist, @Museum, @ImageUrl, @Description, @Year)";
+                using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Title", artwork.Title);
+                command.Parameters.AddWithValue("@Artist", artwork.Artist);
+                command.Parameters.AddWithValue("@Museum", artwork.Museum);
+                command.Parameters.AddWithValue("@ImageUrl", artwork.ImageUrl);
+                command.Parameters.AddWithValue("@Description", artwork.Description);
+                command.Parameters.AddWithValue("@Year", artwork.Year);
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Database error while inserting artwork.");
+                throw;
+            }
+        }
     }
 }
