@@ -36,7 +36,7 @@ namespace ARTNEST.DAL
             connection.Open();
 
             const string query = @"
-                SELECT Id, Name, Email, PasswordHash, CreatedAt
+                SELECT Id, Name, Email, PasswordHash, CreatedAt, IsAdmin
                 FROM Users
                 WHERE Email = @Email";
 
@@ -53,7 +53,8 @@ namespace ARTNEST.DAL
                     Name = reader["Name"]?.ToString() ?? string.Empty,
                     Email = reader["Email"]?.ToString() ?? string.Empty,
                     PasswordHash = reader["PasswordHash"]?.ToString() ?? string.Empty,
-                    CreatedAt = Convert.ToDateTime(reader["CreatedAt"])
+                    CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
+                    IsAdmin = Convert.ToBoolean(reader["IsAdmin"])
                 };
             }
 
@@ -66,7 +67,7 @@ namespace ARTNEST.DAL
             connection.Open();
 
             const string query = @"
-                SELECT Id, Name, Email, PasswordHash, CreatedAt
+                SELECT Id, Name, Email, PasswordHash, CreatedAt, IsAdmin
                 FROM Users
                 WHERE Id = @Id";
 
@@ -83,7 +84,8 @@ namespace ARTNEST.DAL
                     Name = reader["Name"]?.ToString() ?? string.Empty,
                     Email = reader["Email"]?.ToString() ?? string.Empty,
                     PasswordHash = reader["PasswordHash"]?.ToString() ?? string.Empty,
-                    CreatedAt = Convert.ToDateTime(reader["CreatedAt"])
+                    CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
+                    IsAdmin = Convert.ToBoolean(reader["IsAdmin"])
                 };
             }
 
