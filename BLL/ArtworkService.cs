@@ -22,7 +22,11 @@ namespace ARTNEST.BLL
         {
             return _artworkRepository.GetById(id);
         }
-
+        
+        public void CreateArtwork(Artwork artwork)
+        {
+            _artworkRepository.Insert(artwork);
+        }
       
         public List<Artwork> SearchAndFilter(string? query, string? artist, string? museum, string? sortBy)
         {

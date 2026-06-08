@@ -17,14 +17,18 @@
             <span class="logo-subtitle">Personal Museum Memory</span>
         </a>
 
-        <div class="nav-links">
-            <a href="/Explore">Explore</a>
-            @if (Context.Session.GetInt32("UserId") != null)
-            {
-                <a href="/Wishlist">Wishlist</a>
-                <a href="/Journal">Journal</a>
-            }
-        </div>
+      <div class="nav-links">
+    <a href="/Explore">Explore</a>
+    @if (Context.Session.GetInt32("UserId") != null)
+    {
+        <a href="/Wishlist">Wishlist</a>
+        <a href="/Journal">Journal</a>
+    }
+    @if (Context.Session.GetInt32("IsAdmin") == 1)
+    {
+        <a href="/Admin">Add Artwork</a>
+    }
+</div>
 
         <div class="nav-actions">
             @if (Context.Session.GetInt32("UserId") == null)

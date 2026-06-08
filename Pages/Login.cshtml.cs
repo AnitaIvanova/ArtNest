@@ -46,6 +46,7 @@ namespace ARTNEST.Pages
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("UserName", user.Name);
             HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetInt32("IsAdmin", user.IsAdmin ? 1 : 0);
             return RedirectToPage("/Index");
         }
     }

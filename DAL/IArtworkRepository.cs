@@ -2,7 +2,6 @@ using ARTNEST.Models;
 
 namespace ARTNEST.DAL
 {
- 
     public interface IArtworkRepository
     {
         List<Artwork> GetAllArtworks();
@@ -10,5 +9,6 @@ namespace ARTNEST.DAL
         List<string> GetDistinctArtists();
         List<string> GetDistinctMuseums();
         Artwork? GetById(int id);
+        void Insert(Artwork artwork);
     }
 }

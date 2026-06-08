@@ -44,6 +44,7 @@ CREATE TABLE [dbo].[Users](
  [Email] [nvarchar](255) NOT NULL,
  [PasswordHash] [nvarchar](255) NOT NULL,
  [CreatedAt] [datetime] NOT NULL,
+ [IsAdmin] [bit] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
  [Id] ASC
@@ -104,7 +105,7 @@ SET IDENTITY_INSERT [dbo].[Artworks] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Users] ON 
 GO
-INSERT [dbo].[Users] ([Id], [Name], [Email], [PasswordHash], [CreatedAt]) VALUES (2, N'Anita Ivanova', N'anitaivanova2006@abv.bg', N'JoDywuR4Bx68uNFIksHaRg==.1tF9McjZCl4eUcURaGOvY9bWMmeP6hN9SgSI7u7mnNQ=', CAST(N'2026-04-11T00:57:52.267' AS DateTime))
+INSERT [dbo].[Users] ([Id], [Name], [Email], [PasswordHash], [CreatedAt], [IsAdmin]) VALUES (2, N'Anita Ivanova', N'anitaivanova2006@abv.bg', N'JoDywuR4Bx68uNFIksHaRg==.1tF9McjZCl4eUcURaGOvY9bWMmeP6hN9SgSI7u7mnNQ=', CAST(N'2026-04-11T00:57:52.267' AS DateTime), 1)
 GO
 SET IDENTITY_INSERT [dbo].[Users] OFF
 GO
