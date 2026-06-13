@@ -30,8 +30,6 @@ namespace ARTNEST.BLL
                 return "Please select an artwork.";
             if (string.IsNullOrWhiteSpace(reflection))
                 return "Please write a reflection before saving.";
-            if (reflection.Trim().Length < 10)
-                return "Your reflection is too short. Write at least a sentence.";
 
             _journalRepository.Add(userId, artworkId, reflection.Trim());
             return null;

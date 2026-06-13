@@ -25,21 +25,15 @@ namespace ARTNEST.BLL
         
         public void CreateArtwork(Artwork artwork)
         {
-            _artworkRepository.Insert(artwork);
+            _artworkRepository.Insert(artwork);   
         }
-      
-        public List<Artwork> SearchAndFilter(string? query, string? artist, string? museum, string? sortBy)
-        {
-            var artworks = _artworkRepository.SearchArtworks(query, artist, museum, null);
 
-            return sortBy switch
-            {
-                "year_asc"  => artworks.OrderBy(a => a.Year).ToList(),
-                "year_desc" => artworks.OrderByDescending(a => a.Year).ToList(),
-                "artist"    => artworks.OrderBy(a => a.Artist).ToList(),
-                _           => artworks.OrderBy(a => a.Title).ToList()
-            };
-        }
+        
+      
+        public List<Artwork> SearchAndFilter(string? query, string? artist, string? museum )
+        {
+             return _artworkRepository.SearchArtworks(query, artist, museum, null);
+}
 
         public List<string> GetAllArtists()
         {

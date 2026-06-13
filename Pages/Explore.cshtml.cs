@@ -19,8 +19,7 @@ namespace ARTNEST.Pages
         [BindProperty(SupportsGet = true)] public string? SearchQuery { get; set; }
         [BindProperty(SupportsGet = true)] public string? FilterArtist { get; set; }
         [BindProperty(SupportsGet = true)] public string? FilterMuseum { get; set; }
-        [BindProperty(SupportsGet = true)] public string? SortBy { get; set; }
-
+       
         public ExploreModel(ArtworkService artworkService, WishlistService wishlistService,
                             VisitedService visitedService)
         {
@@ -36,7 +35,7 @@ namespace ARTNEST.Pages
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue) return RedirectToPage("/Login");
             _wishlistService.SaveArtwork(userId.Value, artworkId);
-            return RedirectToPage(new { SearchQuery, FilterArtist, FilterMuseum, SortBy });
+            return RedirectToPage(new { SearchQuery, FilterArtist, FilterMuseum });
         }
 
         public IActionResult OnPostToggleVisited(int artworkId)
@@ -44,12 +43,12 @@ namespace ARTNEST.Pages
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue) return RedirectToPage("/Login");
             _visitedService.ToggleVisited(userId.Value, artworkId);
-            return RedirectToPage(new { SearchQuery, FilterArtist, FilterMuseum, SortBy });
+            return RedirectToPage(new { SearchQuery, FilterArtist, FilterMuseum });
         }
 
         private void LoadData()
         {
-            Artworks = _artworkService.SearchAndFilter(SearchQuery, FilterArtist, FilterMuseum, SortBy);
+            Artworks = _artworkService.SearchAndFilter(SearchQuery, FilterArtist, FilterMuseum);
             AllArtists = _artworkService.GetAllArtists();
             AllMuseums = _artworkService.GetAllMuseums();
 

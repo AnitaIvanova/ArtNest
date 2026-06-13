@@ -32,13 +32,6 @@
                 }
             </select>
 
-            <select name="SortBy" class="filter-select">
-                <option value="" selected="@(string.IsNullOrEmpty(Model.SortBy) ? "selected" : null)">Sort: A–Z</option>
-                <option value="artist" selected="@(Model.SortBy == "artist" ? "selected" : null)">Sort: Artist</option>
-                <option value="year_asc" selected="@(Model.SortBy == "year_asc" ? "selected" : null)">Sort: Oldest first</option>
-                <option value="year_desc" selected="@(Model.SortBy == "year_desc" ? "selected" : null)">Sort: Newest first</option>
-            </select>
-
             <button type="submit" class="filter-button">Search</button>
 
             @if (!string.IsNullOrEmpty(Model.SearchQuery) || !string.IsNullOrEmpty(Model.FilterArtist) || !string.IsNullOrEmpty(Model.FilterMuseum))
@@ -83,7 +76,6 @@
                                     <input type="hidden" name="SearchQuery" value="@Model.SearchQuery" />
                                     <input type="hidden" name="FilterArtist" value="@Model.FilterArtist" />
                                     <input type="hidden" name="FilterMuseum" value="@Model.FilterMuseum" />
-                                    <input type="hidden" name="SortBy" value="@Model.SortBy" />
                                     <button type="submit" class="save-button">♥ Save</button>
                                 </form>
 
@@ -92,7 +84,6 @@
                                     <input type="hidden" name="SearchQuery" value="@Model.SearchQuery" />
                                     <input type="hidden" name="FilterArtist" value="@Model.FilterArtist" />
                                     <input type="hidden" name="FilterMuseum" value="@Model.FilterMuseum" />
-                                    <input type="hidden" name="SortBy" value="@Model.SortBy" />
                                     <button type="submit" class="visited-button @(Model.VisitedIds.Contains(artwork.Id) ? "is-visited" : "")">
                                         @(Model.VisitedIds.Contains(artwork.Id) ? "✓ Visited" : "☑ Visit")
                                     </button>

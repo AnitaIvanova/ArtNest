@@ -31,7 +31,7 @@
                         <option value="0">— Select an artwork —</option>
                         @foreach (var artwork in Model.Artworks)
                         {
-                            <option value="@artwork.Id">@artwork.Title – @artwork.Artist</option>
+                            <option value="@artwork.Id">@artwork.Title @artwork.Artist</option>
                         }
                     </select>
                 </div>
@@ -40,7 +40,7 @@
                     <textarea name="NewReflection" class="form-input reflection-textarea"
                               placeholder="What did this artwork make you feel or think? (at least 10 characters)"
                               minlength="10" required></textarea>
-                    <span class="field-hint">Minimum 10 characters</span>
+            
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="auth-button" style="width:auto;padding:12px 32px;">Save Entry</button>
