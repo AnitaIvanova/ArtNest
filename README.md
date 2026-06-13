@@ -17,9 +17,10 @@ At the current stage, the project includes:
 - explore page
 - wishlist page
 - journal page
+- admin page
 - artwork data model and data handling
-- initial SQL Server connection work
-- user authentication and authorization work in progress
+- SQL Server database integration
+- user authentication and authorization 
 
 ## Tech Stack
 
@@ -32,10 +33,11 @@ At the current stage, the project includes:
 ## Project Structure
 
 Main folders in the project:
-- `Pages/` – Razor Pages and page models
+- `Pages/` – Razor Pages (presentation layer)
+- `BLL/` – services with business logic (ArtworkService, UserService, JournalService)
+- `DAL/` – repositories that talk to the database
 - `Models/` – data models such as Artwork and User
-- `Data/` – artwork-related data logic
-- `wwwroot/` – static files such as CSS, JavaScript, and images
+- `wwwroot/` – static files 
 
 ## How to Run the Project
 
