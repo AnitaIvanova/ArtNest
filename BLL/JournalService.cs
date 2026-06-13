@@ -18,12 +18,6 @@ namespace ARTNEST.BLL
             return _journalRepository.GetByUserId(userId);
         }
 
-        public int GetEntryCount(int userId)
-        {
-            return _journalRepository.CountByUserId(userId);
-        }
-
-
         public string? AddEntry(int userId, int artworkId, string reflection)
         {
             if (artworkId == 0)
@@ -31,17 +25,14 @@ namespace ARTNEST.BLL
             if (string.IsNullOrWhiteSpace(reflection))
                 return "Please write a reflection before saving.";
 
-            _journalRepository.Add(userId, artworkId, reflection.Trim());
+            _journalRepository.Add(userId, artworkId, reflection);
             return null;
         }
 
-        public string? UpdateEntry(int entryId, int userId, string reflection)
+        public void UpdateEntry(int entryId, int userId, string reflection)
         {
-            if (string.IsNullOrWhiteSpace(reflection) || reflection.Trim().Length < 10)
-                return "Reflection is too short. Write at least a sentence.";
-
-            _journalRepository.Update(entryId, userId, reflection.Trim());
-            return null;
+            _journalRepository.Update(entryId, userId, reflection);
+           
         }
 
         public void DeleteEntry(int entryId, int userId)

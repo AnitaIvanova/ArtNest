@@ -56,16 +56,9 @@ namespace ARTNEST.Pages
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue) return RedirectToPage("/Login");
 
-            string? error = _journalService.UpdateEntry(EditEntryId, userId.Value, EditReflection);
-            if (error != null)
-            {
-                Message = error;
-                LoadData(userId.Value);
-                return Page();
-            }
-
-            TempData["SuccessMessage"] = "Entry updated successfully.";
-            return RedirectToPage();
+           _journalService.UpdateEntry(EditEntryId, userId.Value, EditReflection);
+           TempData["SuccessMessage"] = "Entry updated successfully.";
+           return RedirectToPage();
         }
 
         public IActionResult OnPostDelete(int entryId)
