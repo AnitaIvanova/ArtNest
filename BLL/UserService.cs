@@ -33,7 +33,6 @@ namespace ARTNEST.BLL
                 Name = name,
                 Email = email,
                 PasswordHash = HashPassword(password),
-                CreatedAt = DateTime.Now
             };
 
             _userRepository.SaveUser(user);
@@ -96,6 +95,8 @@ namespace ARTNEST.BLL
             return true;
         }
 
+
+
         private string HashPassword(string password)
         {
             byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -113,11 +114,6 @@ namespace ARTNEST.BLL
         private bool VerifyPassword(string password, string storedPasswordHash)
         {
             string[] parts = storedPasswordHash.Split('.');
-
-            if (parts.Length != 2)
-            {
-                return false;
-            }
 
             byte[] salt = Convert.FromBase64String(parts[0]);
             string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(

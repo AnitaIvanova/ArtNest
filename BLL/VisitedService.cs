@@ -18,6 +18,8 @@ namespace ARTNEST.BLL
             return _visitedRepository.IsVisited(userId, artworkId);
         }
 
+
+
               public bool ToggleVisited(int userId, int artworkId)
         {
             bool alreadyVisited = _visitedRepository.IsVisited(userId, artworkId);
@@ -28,6 +30,7 @@ namespace ARTNEST.BLL
 
             return !alreadyVisited;
         }
+
 
         public List<Artwork> GetVisitedArtworks(int userId)
         {
@@ -47,3 +50,5 @@ namespace ARTNEST.BLL
         }
     }
 }
+// 1. ToggleVisited - confirm the "return opposite of current state" logic
+// 2. GetVisitedIds - explain .Select(a => a.Id) and .ToHashSet()
