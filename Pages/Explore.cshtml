@@ -88,6 +88,11 @@
                                         @(Model.VisitedIds.Contains(artwork.Id) ? "✓ Visited" : "☑ Visit")
                                     </button>
                                 </form>
+
+                                @if (Model.IsAdmin)
+                                {
+                                    <a href="/Admin?handler=Edit&id=@artwork.Id" class="save-button">✎ Edit</a>
+                                }
                             </div>
                         </div>
                     </div>
