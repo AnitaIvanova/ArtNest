@@ -25,6 +25,7 @@ namespace ARTNEST.Pages
         [BindProperty] public string NewPassword { get; set; } = "";
         [BindProperty] public string ConfirmPassword { get; set; } = "";
 
+        public string MemberSince { get; set; } = "";          // ADDED
         public int SavedArtworksCount { get; set; }
         public int VisitedArtworksCount { get; set; }
         public string Message { get; set; } = "";
@@ -98,6 +99,7 @@ namespace ARTNEST.Pages
             {
                 Name = user.Name;
                 Email = user.Email;
+                MemberSince = user.CreatedAt.ToString("MMMM yyyy");   // ADDED
             }
             SavedArtworksCount = _wishlistService.GetWishlistCount(userId);
             VisitedArtworksCount = _visitedService.GetVisitedCount(userId);

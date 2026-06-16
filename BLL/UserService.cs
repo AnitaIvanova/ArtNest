@@ -33,6 +33,7 @@ namespace ARTNEST.BLL
                 Name = name,
                 Email = email,
                 PasswordHash = HashPassword(password),
+                 CreatedAt = DateTime.Now 
             };
 
             _userRepository.SaveUser(user);
