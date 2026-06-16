@@ -44,5 +44,10 @@ namespace ARTNEST.BLL
         {
             return _artworkRepository.GetDistinctMuseums();
         }
+        public void UpdateArtwork(Artwork artwork)
+{
+       _artworkRepository.Update(artwork);
+}
+
     }
 }

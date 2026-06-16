@@ -10,3 +10,4 @@ namespace ARTNEST.Models
         public bool IsAdmin { get; set; }
     }
 }
+

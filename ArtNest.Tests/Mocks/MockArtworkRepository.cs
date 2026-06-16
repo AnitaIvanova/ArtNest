@@ -57,5 +57,18 @@ namespace ArtNest.Tests.Mocks
             artwork.Id = nextId;
             _artworks.Add(artwork);
         }
+        public void Update(Artwork artwork)
+{
+    var existing = _artworks.FirstOrDefault(a => a.Id == artwork.Id);
+    if (existing != null)
+    {
+        existing.Title = artwork.Title;
+        existing.Artist = artwork.Artist;
+        existing.Museum = artwork.Museum;
+        existing.ImageUrl = artwork.ImageUrl;
+        existing.Description = artwork.Description;
+        existing.Year = artwork.Year;
+    }
+}
     }
 }

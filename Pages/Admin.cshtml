@@ -1,15 +1,15 @@
 @page
 @model ARTNEST.Pages.AdminModel
 @{
-    ViewData["Title"] = "Add Artwork";
+    ViewData["Title"] = Model.EditId > 0 ? "Edit Artwork" : "Add Artwork";
 }
 
 <section class="page-section">
     <div class="container wishlist-container">
 
         <div class="wishlist-header">
-            <h1 class="page-title">Add Artwork</h1>
-            <p class="page-subtitle">Add a new artwork to the collection</p>
+            <h1 class="page-title">@(Model.EditId > 0 ? "Edit Artwork" : "Add Artwork")</h1>
+            <p class="page-subtitle">@(Model.EditId > 0 ? "Update an existing artwork" : "Add a new artwork to the collection")</p>
         </div>
 
         @if (!string.IsNullOrEmpty(Model.Message))
@@ -18,6 +18,7 @@
         }
 
         <form method="post" class="admin-form">
+            <input type="hidden" asp-for="EditId" />
             <div class="form-group">
                 <label>Title</label>
                 <input type="text" asp-for="Title" />
@@ -42,7 +43,7 @@
                 <label>Year</label>
                 <input type="number" asp-for="Year" />
             </div>
-            <button type="submit" class="cta-button">Add Artwork</button>
+            <button type="submit" class="cta-button">@(Model.EditId > 0 ? "Update Artwork" : "Add Artwork")</button>
         </form>
 
     </div>

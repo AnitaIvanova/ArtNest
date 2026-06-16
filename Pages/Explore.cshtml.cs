@@ -15,11 +15,12 @@ namespace ARTNEST.Pages
         public List<string> AllArtists { get; set; } = new();
         public List<string> AllMuseums { get; set; } = new();
         public HashSet<int> VisitedIds { get; set; } = new();
+        public bool IsAdmin { get; set; }
 
         [BindProperty(SupportsGet = true)] public string? SearchQuery { get; set; }
         [BindProperty(SupportsGet = true)] public string? FilterArtist { get; set; }
         [BindProperty(SupportsGet = true)] public string? FilterMuseum { get; set; }
-       
+
         public ExploreModel(ArtworkService artworkService, WishlistService wishlistService,
                             VisitedService visitedService)
         {
@@ -55,6 +56,8 @@ namespace ARTNEST.Pages
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (userId.HasValue)
                 VisitedIds = _visitedService.GetVisitedIds(userId.Value);
+
+            IsAdmin = HttpContext.Session.GetInt32("IsAdmin") == 1;
         }
     }
 }

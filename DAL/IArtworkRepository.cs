@@ -10,5 +10,7 @@ namespace ARTNEST.DAL
         List<string> GetDistinctMuseums();
         Artwork? GetById(int id);
         void Insert(Artwork artwork);
+        void Update(Artwork artwork);
+      
     }
 }
