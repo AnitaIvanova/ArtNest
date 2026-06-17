@@ -1,6 +1,7 @@
 using ARTNEST.BLL;
 using ArtNest.Tests.Mocks;
 using Xunit;
+using ARTNEST.Models;
 
 namespace ArtNest.Tests
 {
@@ -106,7 +107,29 @@ namespace ArtNest.Tests
 
             Assert.Equal(2, museums.Count);
         }
-        
+        [Fact]
+public void UpdateArtwork_ChangesArtworkDetails()
+{
+    var service = CreateService();
+
+    var updated = new Artwork
+    {
+        Id = 1,
+        Title = "Starry Night Updated",
+        Artist = "Vincent van Gogh",
+        Museum = "MoMA",
+        ImageUrl = "/img/sample/starry.jpg",
+        Description = "Updated description.",
+        Year = 1890
+    };
+
+    service.UpdateArtwork(updated);
+
+    var result = service.GetArtworkById(1);
+    Assert.NotNull(result);
+    Assert.Equal("Starry Night Updated", result!.Title);
+    Assert.Equal(1890, result.Year);
+}
         
     }
 }
