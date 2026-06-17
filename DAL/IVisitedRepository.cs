@@ -10,5 +10,6 @@ namespace ARTNEST.DAL
         void UnmarkVisited(int userId, int artworkId);
         List<Artwork> GetVisitedByUserId(int userId);
         int CountByUserId(int userId);
+        HashSet<int> GetVisitedIdsByUserId(int userId);
     }
 }
