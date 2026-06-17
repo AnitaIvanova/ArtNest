@@ -36,13 +36,10 @@ namespace ARTNEST.BLL
             return _visitedRepository.GetVisitedByUserId(userId);
         }
 
-        public HashSet<int> GetVisitedIds(int userId)
-        {
-            return _visitedRepository.GetVisitedByUserId(userId)
-                                     .Select(a => a.Id)
-                                     .ToHashSet();
-        }
-
+      public HashSet<int> GetVisitedIds(int userId)
+{
+    return _visitedRepository.GetVisitedIdsByUserId(userId);
+}
         public int GetVisitedCount(int userId)
         {
             return _visitedRepository.CountByUserId(userId);

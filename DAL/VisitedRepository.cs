@@ -117,6 +117,27 @@ namespace ARTNEST.DAL
                 _logger.LogError(ex, "Database error while counting visited artworks.");
                 return 0;
             }
+            
         }
+        public HashSet<int> GetVisitedIdsByUserId(int userId)
+{
+    var ids = new HashSet<int>();
+    try
+    {
+        using var connection = _factory.Create();
+        connection.Open();
+        const string query = "SELECT ArtworkId FROM VisitedArtworks WHERE UserId = @UserId";
+        using var cmd = new SqlCommand(query, connection);
+        cmd.Parameters.AddWithValue("@UserId", userId);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+            ids.Add(Convert.ToInt32(reader["ArtworkId"]));
+    }
+    catch (SqlException ex)
+    {
+        _logger.LogError(ex, "Database error while loading visited ids.");
+    }
+    return ids;
+}
     }
 }

@@ -38,5 +38,13 @@ namespace ArtNest.Tests.Mocks
 
         public int CountByUserId(int userId) =>
             _visited.Count(v => v.UserId == userId);
+            public HashSet<int> GetVisitedIdsByUserId(int userId)
+{
+    return _visited
+        .Where(v => v.UserId == userId)
+        .Select(v => v.ArtworkId)
+        .ToHashSet();
+}
     }
+    
 }
